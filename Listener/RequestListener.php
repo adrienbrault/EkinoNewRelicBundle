@@ -98,12 +98,11 @@ class RequestListener implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
-        if (\in_array($request->get('_route'), $this->ignoredRoutes, true)) {
+        if (\in_array($request->get('_route'), $this->ignoredRoutes, true)
+            || \in_array($request->getPathInfo(), $this->ignoredPaths, true)
+        ) {
             $this->interactor->ignoreTransaction();
-        }
-
-        if (\in_array($request->getPathInfo(), $this->ignoredPaths, true)) {
-            $this->interactor->ignoreTransaction();
+            $this->interactor->endTransaction(true);
         }
     }
 
